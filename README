@@ -1,0 +1,18 @@
+
+Perl Modular Gtk Application
+====================================================================
+
+This program was made for fun, do not blame me it your pet budgie dies whilst
+using this program!
+
+There are no warranties that this will work 100% and i can not be held
+responsible for any loss by the use of this program.
+
+Folders
+------------------
+modules/
+	You can place any module in here, they have function names that match the filename
+lib/
+	Library files
+	
+

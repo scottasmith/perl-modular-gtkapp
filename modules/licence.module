@@ -1,0 +1,47 @@
+# Copyright (C) <2011>  <Scott Smith> <smitherz82@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+our %module_licence_header = (
+	module_name => 'license',
+	menu_title => 'License Info',
+	frame => &licence_frame,
+	rank => 10
+);
+
+sub licence
+{
+	return %module_licence_header;
+}
+
+sub licence_frame
+{
+	$filename = $APP{APP_DIR} . '/LICENSE';
+	my $content = `cat $filename`;
+
+	my $tview = Gtk2::TextView->new;
+	my $buffer = $tview->get_buffer();
+	$buffer->set_text($content);
+
+	my $sw = Gtk2::ScrolledWindow->new (undef, undef);
+	$sw->set_shadow_type ('etched-out');
+	$sw->set_policy ('automatic', 'automatic');
+	$sw->add($tview);
+
+	my $vbox = Gtk2::VBox->new;
+	$vbox->pack_start ($sw, TRUE, TRUE, 0);
+	return $vbox;
+}
+
+1;

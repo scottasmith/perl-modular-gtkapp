@@ -1,0 +1,81 @@
+# Copyright (C) <2011>  <Scott Smith> <smitherz82@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+our %module_pinger_header = (
+	module_name => 'pinger',
+	menu_title => 'Pinger',
+	frame => &pinger_frame,
+	rank => 2
+);
+
+sub pinger
+{
+	return %module_pinger_header;
+}
+
+sub pinger_frame
+{
+	my $main_vbox = Gtk2::VBox->new (FALSE, 5);
+
+	$main_vbox->add(&pinger_decode_frame);
+	$main_vbox->set_border_width(4);
+
+	return $main_vbox;
+}
+
+sub pinger_decode_frame {
+	my ($frm, $vbox, $hbox1, $txt_label, $txt_box, $res_box, $btn);
+
+	$frm = Gtk2::Frame->new ('Pinger');
+	$vbox = Gtk2::VBox->new (FALSE, 0);
+
+	$hbox = Gtk2::HBox->new (FALSE, 0);
+	$vbox->pack_start ($hbox, TRUE, TRUE, 0);
+
+	$txt_label = Gtk2::Label->new ("Host/IP:");
+	$hbox->pack_start ($txt_label, FALSE, 3, 10);
+	$txt_box = Gtk2::Entry->new;
+	$hbox->pack_end ($txt_box, 10, 1, 10);
+
+	my $tview = Gtk2::TextView->new;
+	my $buffer = $tview->get_buffer();
+
+    my $btn = Gtk2::Button->new ("Decode");
+    $btn->signal_connect (clicked => sub {
+		$buffer->set_text('Please wait, pinging');
+
+		pump_messages();
+
+		my $address = $txt_box->get_text;
+		my $answer = `ping -c 4 $address`;
+		$buffer->set_text($answer);
+	});
+	$btn->set_border_width(10);
+	$vbox->pack_start ($btn, TRUE, FALSE, 0);
+
+	my $sw = Gtk2::ScrolledWindow->new (undef, undef);
+	$sw->set_shadow_type ('etched-out');
+	$sw->set_policy ('automatic', 'automatic');
+	$sw->add($tview);
+	$sw->set_size_request (350, 140);
+
+
+	$vbox->pack_end ($sw, TRUE, TRUE, 0);
+
+	$frm->add($vbox);
+	return $frm;
+}
+
+1;
